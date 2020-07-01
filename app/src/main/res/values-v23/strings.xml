@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tweet_cancele_message">¿Desea realmente cancelar el tweet? El mensaje se eliminará</string>
+    <string name="tweet_cancele_title">Cancelar Tweet</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="cancelar">Cancelar</string>
+</resources>
