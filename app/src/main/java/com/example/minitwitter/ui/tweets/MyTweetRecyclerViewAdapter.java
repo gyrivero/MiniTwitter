@@ -1,4 +1,4 @@
-package com.example.minitwitter.ui;
+package com.example.minitwitter.ui.tweets;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -15,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.minitwitter.R;
 import com.example.minitwitter.common.Constantes;
 import com.example.minitwitter.common.SharedPreferencesManager;
+import com.example.minitwitter.data.TweetViewModel;
 import com.example.minitwitter.retrofit.response.Like;
 import com.example.minitwitter.retrofit.response.Tweet;
 
@@ -25,11 +28,13 @@ public class MyTweetRecyclerViewAdapter extends RecyclerView.Adapter<MyTweetRecy
     private Context ctx;
     private List<Tweet> mValues;
     String username;
+    TweetViewModel tweetViewModel;
 
     public MyTweetRecyclerViewAdapter(Context contexto, List<Tweet> items) {
         mValues = items;
         ctx = contexto;
         username = SharedPreferencesManager.getSomeStringValue(Constantes.PREF_USERNAME);
+        tweetViewModel = new ViewModelProvider((FragmentActivity)ctx).get(TweetViewModel.class);
     }
 
     @Override
@@ -47,6 +52,12 @@ public class MyTweetRecyclerViewAdapter extends RecyclerView.Adapter<MyTweetRecy
             holder.tvUsername.setText("@" + holder.mItem.getUser().getUsername());
             holder.tvMessage.setText(holder.mItem.getMensaje());
             holder.tvLikesCount.setText(String.valueOf(holder.mItem.getLikes().size()));
+            holder.ivLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tweetViewModel.likeTweet(holder.mItem.getId());
+                }
+            });
 
             String photo = holder.mItem.getUser().getPhotoUrl();
             if (!photo.equals("")) {
@@ -58,8 +69,21 @@ public class MyTweetRecyclerViewAdapter extends RecyclerView.Adapter<MyTweetRecy
             Glide.with(ctx)
                     .load(R.drawable.ic_like)
                     .into(holder.ivLike);
-            holder.tvLikesCount.setTextColor(ctx.getResources().getColor(android.R.color.black));
+            holder.tvLikesCount.setTextColor(ctx.getResources().getColor(android.R.color.black,null));
             holder.tvLikesCount.setTypeface(null, Typeface.NORMAL);
+
+            holder.showMenuIV.setVisibility(View.GONE);
+            if (holder.mItem.getUser().getUsername().equals(username)) {
+                holder.showMenuIV.setVisibility(View.VISIBLE);
+            }
+
+            holder.showMenuIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tweetViewModel.openDialogTweetMenu(ctx,holder.mItem.getId());
+                }
+            });
+
 
             for (Like like : holder.mItem.getLikes()) {
                 if (like.getUsername().equals(username)) {
@@ -95,6 +119,7 @@ public class MyTweetRecyclerViewAdapter extends RecyclerView.Adapter<MyTweetRecy
         public final TextView tvUsername;
         public final TextView tvMessage;
         public final TextView tvLikesCount;
+        public final ImageView showMenuIV;
         public Tweet mItem;
 
         public ViewHolder(View view) {
@@ -105,6 +130,7 @@ public class MyTweetRecyclerViewAdapter extends RecyclerView.Adapter<MyTweetRecy
             tvUsername = view.findViewById(R.id.textViewUsername);
             tvMessage = view.findViewById(R.id.textViewMessage);
             tvLikesCount = view.findViewById(R.id.textViewLikes);
+            showMenuIV = view.findViewById(R.id.showMenuIV);
         }
 
         @Override

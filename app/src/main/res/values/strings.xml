@@ -19,4 +19,12 @@
     <string name="eliminar">Eliminar</string>
     <string name="cancelar">Cancelar</string>
     <string name="new_tweet_empty_error">Debe escribir un mensaje</string>
+    <string name="eliminar_tweet">Eliminar Tweet</string>
+    <string name="nombre_de_usuario">Nombre de Usuario</string>
+    <string name="e_mail">E-mail</string>
+    <string name="constrase_a_actual">Constraseña Actual</string>
+    <string name="guardar">Guardar</string>
+    <string name="modificar_contrase_a">Modificar Contraseña</string>
+    <string name="website">Website</string>
+    <string name="descripcion_e_intereses">Descripcion e intereses</string>
 </resources>
